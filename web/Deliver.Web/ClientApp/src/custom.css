@@ -79,3 +79,7 @@ ul.timeline > li.rejected:before {
   height: 20px;
   z-index: 400;
 }
+
+li.page:not(.active){
+  cursor: pointer;
+}
