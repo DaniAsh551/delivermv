@@ -80,6 +80,6 @@ ul.timeline > li.rejected:before {
   z-index: 400;
 }
 
-li.page:not(.active){
+li.page-item:not(.active){
   cursor: pointer;
 }

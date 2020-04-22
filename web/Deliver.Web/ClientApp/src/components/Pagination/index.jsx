@@ -62,7 +62,7 @@ export default function Pagination({ paging, onPage, allowGranularControl = fals
         <div className="text-center" style={{width:'100%'}}>
             <nav>
                 <ReactPaginate
-                onPageChange={p => console.log(p.selected + 1)}
+                onPageChange={p => onPage(p.selected + 1)}
                 containerClassName="pagination"
                 pageCount={totalPages}
                 pageRangeDisplayed={2}
@@ -75,7 +75,7 @@ export default function Pagination({ paging, onPage, allowGranularControl = fals
                 nextClassName="page-item"
                 nextLinkClassName="page-link"
                 previousLabel={'<'}
-                initialPage={page}
+                initialPage={page - 1}
                 nextLabel={'>'} />
             </nav>
         </div>
