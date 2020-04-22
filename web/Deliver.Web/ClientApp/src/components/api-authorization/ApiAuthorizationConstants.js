@@ -1,3 +1,4 @@
+import Constants from '../../Constants';
 export const ApplicationName = 'Deliver.Web';
 
 export const QueryParameterNames = {
@@ -19,7 +20,7 @@ export const LoginActions = {
   Register: 'register'
 };
 
-const prefix = '/authentication';
+const prefix = `/authentication`;
 
 export const ApplicationPaths = {
   DefaultLoginRedirectPath: '/',
