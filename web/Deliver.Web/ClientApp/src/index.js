@@ -23,12 +23,4 @@ ReactDOM.render(
 // worker can interfere with the Identity UI, so it is
 // disabled by default when Identity is being used.
 //
-if(window.location.pathname.startsWith('/connect') 
-|| window.location.pathname.startsWith('/authentication'))
-{
-  unregister();
-  window.location.reload();
-}
-else
-  registerServiceWorker();
-
+//registerServiceWorker();
