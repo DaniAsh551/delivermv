@@ -1,0 +1,128 @@
+﻿@page
+@using Microsoft.EntityFrameworkCore;
+@using Deliver.Data.Common;
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+    var islands = await Model.Islands.Where(x => x.IsActive)
+        .OrderBy(x => x.Name)
+        .Select(x => new { value = x.Id, text = x.Name })
+        .ToArrayAsync();
+    var islandsSingle = new SelectList(islands, "value", "text");
+    var islandsMultiple = new MultiSelectList(islands, "value", "text");
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+    <div class="col-12">
+        <form asp-route-returnUrl="@Model.ReturnUrl" method="post">
+            <h4>Register your shop.</h4>
+            <hr />
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="row">
+                <h6 class="col-12  mt-2">Shop Details</h6>
+                <div class="form-group col-12 col-md-4">
+                    <label asp-for="Input.ShopName"></label>
+                    <input asp-for="Input.ShopName" class="form-control" />
+                    <span asp-validation-for="Input.ShopName" class="text-danger"></span>
+                </div>
+                <div class="form-group col-12 col-md-4">
+                    <label asp-for="Input.Phone"></label>
+                    <input asp-for="Input.Phone" class="form-control" />
+                    <span asp-validation-for="Input.Phone" class="text-danger"></span>
+                </div>
+                <div class="form-group col-12 col-md-4">
+                    <label asp-for="Input.SupportedIslands"></label>
+                    <select multiple asp-for="Input.SupportedIslands" class="form-control select-picker">
+                        <optgroup label="Select Islands which you would be delivering to">
+                            @foreach (var island in islands)
+                            {
+                                <option value="@island.value">@island.text</option>
+                            }
+                        </optgroup>
+                    </select>
+                    <span asp-validation-for="Input.SupportedIslands" class="text-danger"></span>
+                </div>
+
+                <h6 class="col-12 mt-2">Account Details</h6>
+                <div class="form-group col-12 col-md-4">
+                    <label asp-for="Input.Password"></label>
+                    <input asp-for="Input.Password" class="form-control" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+                <div class="form-group col-12 col-md-4">
+                    <label asp-for="Input.ConfirmPassword"></label>
+                    <input asp-for="Input.ConfirmPassword" class="form-control" />
+                    <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                </div>
+
+                <h6 class="col-12 mt-2">Payment Details</h6>
+                <div class="form-group col-12 col-md-4">
+                    <label asp-for="Input.PaymentMethods"></label>
+                    <select multiple asp-for="Input.PaymentMethods" class="form-control select-picker">
+                        <optgroup label="Select Payment methods that you support">
+                            <option value="@((int)PaymentMethod.CashOnDelivery)">Cash On Delivery</option>
+                            <option value="@((int)PaymentMethod.BankTransferBml)">BML Bank Transfer</option>
+                            <option value="@((int)PaymentMethod.CreditCardBml)">BML Cash Card</option>
+                            <option value="@((int)PaymentMethod.BankTransferMib)">MIB Bank Transfer</option>
+                            <option value="@((int)PaymentMethod.CreditCardMib)">MIB Cash Card</option>
+                        </optgroup>
+                    </select>
+                    <span asp-validation-for="Input.PaymentMethods" class="text-danger"></span>
+                </div>
+                <div class="col-12 p-0 m-0 border-0"></div>
+                <div id="ban" class="form-group col-12 col-md-6 d-none">
+                    <label asp-for="Input.BmlAccountNo"></label>
+                    <input asp-for="Input.BmlAccountNo" class="form-control" />
+                    <span asp-validation-for="Input.BmlAccountNo" class="text-danger"></span>
+                </div>
+                <div id="man" class="form-group col-12 col-md-6 d-none">
+                    <label asp-for="Input.MibAccountNo"></label>
+                    <input asp-for="Input.MibAccountNo" class="form-control" />
+                    <span asp-validation-for="Input.MibAccountNo" class="text-danger"></span>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Register</button>
+        </form>
+    </div>
+    @if ((Model.ExternalLogins?.Count ?? 0) > 0)
+    {
+        <div class="col-md-6 col-md-offset-2">
+            <section>
+                <h4>Use another service to register.</h4>
+                <hr />
+                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                    <div>
+                        <p>
+                            @foreach (var provider in Model.ExternalLogins)
+                            {
+                                <button id="btnSubmit" type="button" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                            }
+                        </p>
+                    </div>
+                </form>
+            </section>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $('#Input_PaymentMethods').change(function () {
+            let selected = $(this).val();
+            if (selected.includes('@((int)PaymentMethod.BankTransferBml)'))
+                $('#ban').removeClass('d-none').fadeIn();
+            else
+                $('#ban').addClass('d-none');
+
+            if (selected.includes('@((int)PaymentMethod.BankTransferMib)'))
+                $('#man').removeClass('d-none').fadeIn();
+            else
+                $('#man').addClass('d-none');
+        }).change();
+    </script>
+}

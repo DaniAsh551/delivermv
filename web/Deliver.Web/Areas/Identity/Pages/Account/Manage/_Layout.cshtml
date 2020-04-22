@@ -1,0 +1,27 @@
+﻿@inject Deliver.Web.Data.DeliverDbContext db
+@using Microsoft.EntityFrameworkCore
+@{
+    Layout = "/Areas/Identity/Pages/_Layout.cshtml";
+    var userId = await db.Users.Where(x => x.IsActive && x.UserName == User.Identity.Name)
+        .Select(x => x.Id).FirstOrDefaultAsync();
+}
+
+<h1>Manage your account</h1>
+
+<div>
+    <h4>Change your account settings</h4>
+    <p>Looking for your orders? Click <a href="/shop/@(userId)/orders">here</a></p>
+    <hr />
+    <div class="row">
+        <div class="col-md-3">
+            <partial name="_ManageNav" />
+        </div>
+        <div class="col-md-9">
+            @RenderBody()
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @RenderSection("Scripts", required: false)
+}
