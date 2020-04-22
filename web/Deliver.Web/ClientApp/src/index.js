@@ -25,7 +25,10 @@ ReactDOM.render(
 //
 if(window.location.pathname.startsWith('/connect') 
 || window.location.pathname.startsWith('/authentication'))
-  unregister()
+{
+  unregister();
+  window.location.reload();
+}
 else
   registerServiceWorker();
 
