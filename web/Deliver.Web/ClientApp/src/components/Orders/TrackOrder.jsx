@@ -20,10 +20,7 @@ function TrackOrder() {
             value: null,
             validationText: '',
             validation: function(value){
-                const chunks = value.split('-');
-                return value && value.length == 36 && value.split('').filter(x => x === '-').length === 4 && 
-                    chunks.length === 5 && chunks[0].length === 8 && chunks[1].length === 4 && chunks[2].length === 4
-                    && chunks[3].length === 4 && chunks[4].length === 12
+                return value && value.length == 32
                     ? ''
                     : 'Please Enter a valid Order no.';
             }
@@ -54,7 +51,19 @@ function TrackOrder() {
                             return;
                         }
 
-                        trackOrder(fillables.orderId.value).then(response => {
+                        let orderId = '';
+                        let noAdded = 0;
+                        fillables.orderId.value.split('').forEach((e,i) => {
+                            if([8,13,18,23].includes(noAdded)){
+                                noAdded++;
+                                orderId += '-';
+                            }
+
+                            orderId += ('' + e);
+                            noAdded++;
+                        });
+
+                        trackOrder(orderId).then(response => {
                             newState.order = response.result;
                             getShop(newState.order.shop).then(response => {
                                 newState.shop = response.result;
