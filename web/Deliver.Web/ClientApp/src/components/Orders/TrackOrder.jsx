@@ -6,7 +6,7 @@ import OrderCard from './orderCard';
 import Pagination from '../Pagination';
 import { notify } from 'react-notify-toast';
 
-function TrackOrder() {
+function TrackOrder({ orderId }) {
     const trackOrder = API.trackOrder;
     const getShop = API.getStore;
 
@@ -17,7 +17,7 @@ function TrackOrder() {
 
     const [fillables, setFillables] = useState({
         orderId: {
-            value: null,
+            value: orderId,
             validationText: '',
             validation: function(value){
                 return value && value.length == 32
@@ -90,7 +90,10 @@ function TrackOrder() {
         }
     };
 
+    
     const { order, shop } = state;
+    if(orderId && (!order || !shop))
+        handleAction('track');
 
     return (
         <div className="container">
@@ -305,5 +308,5 @@ function getTimelineClass(status, order){
 }
 
 export default function paramsToProps(props) {
-    return TrackOrder();
+    return TrackOrder({ orderId: props.match.params.orderId });
 }

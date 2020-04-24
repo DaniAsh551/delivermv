@@ -10,22 +10,23 @@ import Orders from './components/Orders/index';
 import Order from './components/Orders/Order';
 import TrackOrder from './components/Orders/TrackOrder';
 import Notifications from 'react-notify-toast';
-
 import './custom.css'
 
 export default function App() {
-  const displayName = App.name;
+
     return (
         <>
             <Layout>
                 <Route exact path='/' component={Home} />
                 <Route path={ApplicationPaths.ApiAuthorizationPrefix} component={ApiAuthorizationRoutes} />
                 <Route exact path='/shop/:id' component={Shop}  />
-                <Route exact path='/track' component={TrackOrder}  />
+                <Route path='/track/:orderId?' component={TrackOrder}  />
                 <AuthorizeRoute exact path='/shop/:id/orders' component={Orders} />
                 <AuthorizeRoute exact path='/shop/:shopId/orders/:id' component={Order} />
             </Layout>
             <Notifications />
+
+            
         </>
     );
 }

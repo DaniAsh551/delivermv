@@ -173,7 +173,7 @@ function Shop({ history, id }) {
                         <h6>Congratulations, your order has been placed.</h6>
                         <p>Your order no is: <b>{state.orderId}</b> <button className="btn btn-sm btn-success" onClick={() => handleEvent('copy')}>Copy Order No</button></p>
                         <h5 className="text-danger">Please keep this order no saved someplace as you won't be able to find the order later without the order no.</h5>
-                        <p>You can also head over to <a className="text-success" style={{cursor:'pointer'}} onClick={e => history.push(`/track`)}>'{window.location.origin}/track'</a> to track your order.</p>
+                        <p>You can also head over to <a className="text-success" style={{cursor:'pointer'}} onClick={e => history.push(`/track/${state.orderId}`)}>'{window.location.origin}/track'</a> to track your order.</p>
                         <button className="btn btn-success" onClick={() => history.goBack()}>Go Back</button>
                     </div>
                     <textarea style={{position:'absolute', width:"0px", height:"0px", left:"-100px", top:"-100px"}} ref={textArea} >{state.orderId}</textarea>
