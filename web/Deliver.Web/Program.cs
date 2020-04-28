@@ -11,6 +11,11 @@ namespace Deliver.Web
 {
     public class Program
     {
+#if !DEBUG
+        static IConfiguration Config = new ConfigurationBuilder()
+            .AddJsonFile("appsettings.json", optional: false).Build();
+#endif
+
         public static void Main(string[] args)
         {
             CreateWebHostBuilder(args).Build().Run();
@@ -18,6 +23,16 @@ namespace Deliver.Web
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+#if !DEBUG
+        .UseKestrel(options =>
+            {
+                options.Listen(System.Net.IPAddress.Any, 5000);  // http:localhost:5000
+                options.Listen(System.Net.IPAddress.Any, 50001, listenOptions =>
+                {
+                    listenOptions.UseHttps(Config["Cert:Pfx"], Config["Cert:Password"]);
+                });
+            }) 
+#endif
             .ConfigureLogging(logging => 
             {
                 logging.ClearProviders();
