@@ -24,14 +24,17 @@ namespace Deliver.Web
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
 #if !DEBUG
-        .UseKestrel(options =>
+            .UseKestrel(options =>
             {
                 options.Listen(System.Net.IPAddress.Any, 5000);  // http:localhost:5000
                 options.Listen(System.Net.IPAddress.Any, 50001, listenOptions =>
                 {
-                    listenOptions.UseHttps(Config["Cert:Pfx"], Config["Cert:Password"]);
+                    if (String.IsNullOrWhiteSpace(Config["Cert:Pfx"]))
+                        listenOptions.UseHttps();
+                    else
+                        listenOptions.UseHttps(Config["Cert:Pfx"], Config["Cert:Password"]);
                 });
-            }) 
+            })
 #endif
             .ConfigureLogging(logging => 
             {
